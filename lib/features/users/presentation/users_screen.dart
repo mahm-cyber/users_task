@@ -13,6 +13,24 @@ class UsersScreen extends StatefulWidget {
 }
 
 class _UsersScreenState extends State<UsersScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) =>
+          UsersBloc(GetUsersUsecase(di()))..add(const UsersFetched()),
+      child: Scaffold(backgroundColor: Colors.grey.shade50, body: UsersBody()),
+    );
+  }
+}
+
+class UsersBody extends StatefulWidget {
+  const UsersBody({super.key});
+
+  @override
+  State<UsersBody> createState() => _UsersBodyState();
+}
+
+class _UsersBodyState extends State<UsersBody> {
   late final ScrollController _scrollController;
 
   @override
@@ -22,14 +40,16 @@ class _UsersScreenState extends State<UsersScreen> {
   }
 
   void _onScroll() {
-    // trigger fetch when user scrolls near bottom
-    // if (_scrollController.position.pixels >=
-    //     _scrollController.position.maxScrollExtent - 200) {
-    //   final bloc = context.read<UsersBloc>();
-    //   if (!(bloc.state.hasReachedMax) && bloc.state.status is! UsersListLoading) {
-    //     bloc.add(const UsersFetched());
-    //   }
-    // }
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.7) {
+      final bloc = context.read<UsersBloc>();
+      final state = bloc.state;
+
+      if (state.status is! UsersListLoading &&
+          state.status is! UsersListLoadMore) {
+        bloc.add(const UsersLoadMore());
+      }
+    }
   }
 
   @override
@@ -41,63 +61,106 @@ class _UsersScreenState extends State<UsersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          UsersBloc(GetUsersUsecase(di()))..add(const UsersFetched()),
-      child: Scaffold(
-        backgroundColor: Colors.grey.shade50,
-        body: CustomScrollView(
-          controller: _scrollController,
-          slivers: [
-            const SliverAppBar(title: Text('Users') ,backgroundColor: Colors.transparent,),
-            BlocBuilder<UsersBloc, UsersState>(
-              builder: (context, state) {
-                final status = state.status;
-
-                if (status is UsersListLoading && state.nextPage == 1) {
-                  return const SliverFillRemaining(
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                } else if (status is UsersListLoaded) {
-                  final users = status.users;
-
-                  return SliverList(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                      final user = users[index];
-                      return UserCard(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            '/user-detail',
-                            arguments: user.id,
-                          );
-                        },
-                        id: user.id,
-                        email: user.email,
-                        firstName: user.firstName,
-                        lastName: user.lastName,
-                        avatarUrl: user.avatar,
-                      );
-                    }, childCount: users.length),
-                  );
-                } else if (status is UsersListEmpty) {
-                  return const SliverFillRemaining(
-                    child: Center(child: Text('No users found')),
-                  );
-                } else if (status is UsersListError) {
-                  return const SliverFillRemaining(
-                    child: Center(child: Text('Error loading users')),
-                  );
-                } else {
-                  return const SliverFillRemaining(
-                    child: Center(child: Text('No Users')),
-                  );
-                }
-              },
-            ),
-          ],
+    return CustomScrollView(
+      controller: _scrollController,
+      physics: const AlwaysScrollableScrollPhysics(),
+      slivers: [
+        const SliverAppBar(
+          title: Text('Users'),
+          pinned: true,
+          backgroundColor: Colors.white,
+          elevation: 1,
         ),
-      ),
+
+        BlocBuilder<UsersBloc, UsersState>(
+          builder: (context, state) {
+            final status = state.status;
+
+            if (status is UsersListLoading) {
+              return const SliverFillRemaining(
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }
+
+            if (status is UsersListLoaded || status is UsersListLoadMore) {
+              final pagination = status is UsersListLoaded
+                  ? status.users
+                  : (status as UsersListLoadMore).users;
+
+              final users = pagination.users;
+              final isLoadingMore = status is UsersListLoadMore;
+
+              return SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  if (index >= users.length) {
+                    return const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 24),
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+
+                  final user = users[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    child: UserCard(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/user-detail',
+                          arguments: user.id,
+                        );
+                      },
+                      id: user.id,
+                      email: user.email,
+                      firstName: user.firstName,
+                      lastName: user.lastName,
+                      avatarUrl: user.avatar,
+                    ),
+                  );
+                }, childCount: users.length + (isLoadingMore ? 1 : 0)),
+              );
+            }
+
+            if (status is UsersListEmpty) {
+              return const SliverFillRemaining(
+                child: Center(child: Text('No users found')),
+              );
+            }
+
+            if (status is UsersListError) {
+              return SliverFillRemaining(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Error loading users',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      const SizedBox(height: 8),
+                      ElevatedButton(
+                        onPressed: () {
+                          context.read<UsersBloc>().add(const UsersFetched());
+                        },
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+
+            return const SliverFillRemaining(
+              child: Center(child: Text('No Users')),
+            );
+          },
+        ),
+
+        SliverToBoxAdapter(child: SizedBox(height: 300)),
+      ],
     );
   }
 }

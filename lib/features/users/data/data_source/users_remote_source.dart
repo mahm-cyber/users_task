@@ -8,18 +8,17 @@ class UsersRemoteSource {
 
   UsersRemoteSource(this._dio);
 
-  Future<List<UserModel>> getUsers({int? page}) async {
+  Future<UsersResponse> getUsers({int? page}) async {
     try {
       final response = await _dio.get(
         '/users',
         queryParameters: {'page': page},
       );
-      print('Response ${response.runtimeType}')
-      ;
+      print('Response ${response.runtimeType}');
       print('Data2 ${response.data.runtimeType}');
       final UsersResponse usersResponse = UsersResponse.fromJson(response.data);
 
-      return usersResponse.data;
+      return usersResponse;
     } catch (e) {
       print('Current Error 1 $e');
       rethrow;

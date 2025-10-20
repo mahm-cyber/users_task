@@ -1,4 +1,4 @@
-import 'package:users/features/users/domain/entities/user.dart';
+import 'package:users/features/users/domain/entities/user_pagination.dart';
 import 'package:users/features/users/domain/repositories/users_repository.dart';
 
 class GetUsersUsecase {
@@ -6,7 +6,7 @@ class GetUsersUsecase {
 
   GetUsersUsecase(this._usersRepository);
 
-  Future<List<User>> call({int? page}) async {
+  Future<UserPagination> call({int? page}) async {
     try {
       return await _usersRepository.getUsers(page: page);
     } catch (e) {

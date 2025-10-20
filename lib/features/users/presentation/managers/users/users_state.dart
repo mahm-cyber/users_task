@@ -16,7 +16,7 @@ final class UsersListLoading extends UsersListStatus {
 }
 
 final class UsersListLoaded extends UsersListStatus {
-  final List<User> users;
+  final UserPagination users;
   const UsersListLoaded(this.users);
 
   @override
@@ -28,13 +28,13 @@ final class UsersListEmpty extends UsersListStatus {
 }
 
 final class UsersListLoadMore extends UsersListStatus {
-   
+  final bool hasNextPage;
+  final UserPagination users;
 
-  final List<User> users;
-  const UsersListLoadMore(this.users);
+  const UsersListLoadMore(this.hasNextPage, this.users);
 
   @override
-  List<Object> get props => [users];
+  List<Object> get props => [hasNextPage, users];
 }
 
 final class UsersListError extends UsersListStatus {
@@ -43,18 +43,17 @@ final class UsersListError extends UsersListStatus {
 
 class UsersState extends Equatable {
   final UsersListStatus status;
-  final bool hasReachedMax;
-  final int nextPage;
-  const UsersState({this.status = const UsersListInitial(), this.hasReachedMax = false, this.nextPage = 1});
 
-  UsersState copyWith({UsersListStatus? status, bool? hasReachedMax, int? nextPage}) {
-    return UsersState(
-      status: status ?? this.status,
-      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
-      nextPage: nextPage ?? this.nextPage,
-    );
+  const UsersState({this.status = const UsersListInitial()});
+
+  UsersState copyWith({
+    UsersListStatus? status,
+    bool? hasReachedMax,
+    int? nextPage,
+  }) {
+    return UsersState(status: status ?? this.status);
   }
 
   @override
-  List<Object> get props => [status, hasReachedMax, nextPage];
+  List<Object> get props => [status];
 }

@@ -1,4 +1,3 @@
-
 part of 'users_bloc.dart';
 
 sealed class UsersEvent extends Equatable {
@@ -10,10 +9,6 @@ sealed class UsersEvent extends Equatable {
 
 final class UsersFetched extends UsersEvent {
   const UsersFetched();
-}
-
-final class UsersRefreshed extends UsersEvent {
-  const UsersRefreshed();
 }
 
 final class UsersLoadMore extends UsersEvent {

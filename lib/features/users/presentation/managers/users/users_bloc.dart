@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:users/features/users/domain/entities/user.dart';
+import 'package:users/features/users/domain/entities/user_pagination.dart';
 import 'package:users/features/users/domain/usecases/get_users.dart';
 
 part 'users_event.dart';
@@ -11,69 +11,41 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
   final GetUsersUsecase getUsersUsecase;
 
   UsersBloc(this.getUsersUsecase) : super(const UsersState()) {
-    on<UsersFetched>(_onUsersFetched);
-
+    on<UsersFetched>(_onUsersFetched, transformer: droppable());
     on<UsersLoadMore>(_onUsersLoadMore, transformer: droppable());
-    on<UsersRefreshed>(_onUsersRefreshed);
   }
 
   Future<void> _onUsersFetched(
     UsersFetched event,
     Emitter<UsersState> emit,
   ) async {
-    // Prevent multiple simultaneous calls
-    if (state.status is UsersListLoading || state.hasReachedMax) return;
+    if (state.status is UsersListLoading) return;
 
-    final currentUsers = state.status is UsersListLoaded
-        ? (state.status as UsersListLoaded).users
-        : <User>[];
-
-    emit(state.copyWith(status: const UsersListLoading()));
+    emit(
+      state.copyWith(
+        status: const UsersListLoading(),
+        nextPage: 1,
+        hasReachedMax: false,
+      ),
+    );
 
     try {
-      final result = await getUsersUsecase.call(page: state.nextPage);
+      final pagination = await getUsersUsecase.call(page: 1);
 
-      if (result.isEmpty) {
+      if (pagination.users.isEmpty) {
         emit(
           state.copyWith(status: const UsersListEmpty(), hasReachedMax: true),
         );
       } else {
         emit(
           state.copyWith(
-            status: UsersListLoaded([...currentUsers, ...result]),
-            hasReachedMax: result.isEmpty,
-            nextPage: state.nextPage + 1,
+            status: UsersListLoaded(pagination),
+            nextPage: pagination.page + 1,
+            hasReachedMax: !pagination.hasNextPage,
           ),
         );
       }
-    } catch (e) {
-      emit(state.copyWith(status: const UsersListError()));
-    }
-  }
-
-  Future<void> _onUsersRefreshed(
-    UsersRefreshed event,
-    Emitter<UsersState> emit,
-  ) async {
-    emit(const UsersState(status: UsersListLoading()));
-
-    try {
-      final result = await getUsersUsecase.call(page: 1);
-
-      if (result.isEmpty) {
-        emit(
-          state.copyWith(status: const UsersListEmpty(), hasReachedMax: true),
-        );
-      } else {
-        emit(
-          state.copyWith(
-            status: UsersListLoaded(result),
-            hasReachedMax: false,
-            nextPage: 2,
-          ),
-        );
-      }
-    } catch (e) {
+    } catch (_) {
       emit(state.copyWith(status: const UsersListError()));
     }
   }
@@ -82,33 +54,38 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
     UsersLoadMore event,
     Emitter<UsersState> emit,
   ) async {
-    // Prevent multiple simultaneous calls
-    if (state.status is UsersListLoading || state.hasReachedMax) return;
+    if (state.status is! UsersListLoaded) return;
 
-    final currentUsers = state.status is UsersListLoaded
-        ? (state.status as UsersListLoaded).users
-        : <User>[];
+    final currentState = state.status as UsersListLoaded;
+    final currentPagination = currentState.users;
+    final currentUsers = currentPagination.users;
+    final hasNextPage = currentPagination.hasNextPage;
 
-    emit(state.copyWith(status: UsersListLoadMore(currentUsers)));
+    emit(
+      state.copyWith(status: UsersListLoadMore(hasNextPage, currentPagination)),
+    );
 
     try {
-      final result = await getUsersUsecase.call(page: state.nextPage);
+      final newPagination = await getUsersUsecase.call(
+        page: currentPagination.page + 1,
+      );
+      final newUsers = [...currentUsers, ...newPagination.users];
 
-      if (result.isEmpty) {
-        emit(
-          state.copyWith(status: const UsersListEmpty(), hasReachedMax: true),
-        );
-      } else {
-        emit(
-          state.copyWith(
-            status: UsersListLoaded([...currentUsers, ...result]),
-            hasReachedMax: result.isEmpty,
-            nextPage: state.nextPage + 1,
-          ),
-        );
-      }
-    } catch (e) {
-      emit(state.copyWith(status: const UsersListError()));
+      final mergedPagination = currentPagination.copyWith(
+        users: newUsers,
+        page: newPagination.page,
+        totalPages: newPagination.totalPages,
+      );
+
+      emit(
+        state.copyWith(
+          status: UsersListLoaded(mergedPagination),
+          nextPage: mergedPagination.page + 1,
+          hasReachedMax: !mergedPagination.hasNextPage,
+        ),
+      );
+    } catch (_) {
+      emit(state.copyWith(status: UsersListError()));
     }
   }
 }
