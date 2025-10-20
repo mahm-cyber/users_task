@@ -1,0 +1,26 @@
+name: users
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.10.0-162.1.beta
+
+dependencies:
+  flutter:
+    sdk: flutter
+  dio: ^5.9.0
+  pretty_dio_logger: ^1.4.0
+  equatable: ^2.0.7
+  flutter_bloc: ^9.1.1
+  get_it: ^8.2.0
+  bloc_concurrency: ^0.3.0
+  cached_network_image: ^3.4.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
