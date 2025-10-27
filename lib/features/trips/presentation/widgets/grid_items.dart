@@ -128,16 +128,12 @@ class ItemsGrid extends StatelessWidget {
       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: ResponsiveBuilder.value(
           context: context,
-          initial: 343,
+          initial: 360,
           md: 240,
         ),
         crossAxisSpacing: 20,
         mainAxisSpacing: 20,
-        mainAxisExtent: ResponsiveBuilder.value(
-          context: context,
-          initial: 314,
-          md: 322,
-        ),
+        mainAxisExtent: ResponsiveBuilder.value(context: context, initial: 322),
       ),
       itemCount: items.length,
       itemBuilder: (context, index) {
@@ -160,6 +156,11 @@ class ItemCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
       ),
       clipBehavior: Clip.antiAlias,
+      margin: ResponsiveBuilder.value(
+        context: context,
+        initial: EdgeInsets.symmetric(horizontal: 16),
+        md: EdgeInsets.zero,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
