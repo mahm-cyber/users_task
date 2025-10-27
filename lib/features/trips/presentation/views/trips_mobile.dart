@@ -29,7 +29,7 @@ class TripsMobile extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFFD4A574),
+                      color: Color(0xFFFFC268),
                     ),
                   ),
                   TextSpan(
@@ -37,7 +37,7 @@ class TripsMobile extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.normal,
-                      color: Color(0xFFD4A574),
+                      color: Color(0xFFFFC268),
                     ),
                   ),
                 ],

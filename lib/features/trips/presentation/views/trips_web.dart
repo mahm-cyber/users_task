@@ -55,7 +55,7 @@ class TripsWeb extends StatelessWidget {
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
                               color: const Color(0xFF1a1a1a),
-                              borderRadius: BorderRadius.circular(8),
+                              shape: BoxShape.circle,
                             ),
                             child: const Icon(
                               Icons.tune,
@@ -70,7 +70,7 @@ class TripsWeb extends StatelessWidget {
                               vertical: 12,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFD4A574),
+                              color: const Color(0xFFFFC268),
                               borderRadius: BorderRadius.circular(25),
                             ),
                             child: const Row(

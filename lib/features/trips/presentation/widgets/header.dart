@@ -25,7 +25,7 @@ class AppHeaderContent extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFFD4A574),
+                    color: Color(0xFFFFC268),
                   ),
                 ),
                 TextSpan(
@@ -33,7 +33,7 @@ class AppHeaderContent extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.normal,
-                    color: Color(0xFFD4A574),
+                    color: Color(0xFFFFC268),
                   ),
                 ),
               ],
