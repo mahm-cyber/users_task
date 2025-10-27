@@ -125,15 +125,24 @@ class ItemsGrid extends StatelessWidget {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: ResponsiveBuilder.value(
-          context: context,
-          initial: 360,
-          md: 240,
+      gridDelegate: ResponsiveBuilder.value(
+        context: context,
+        initial: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisSpacing: 20,
+          mainAxisSpacing: 20,
+          crossAxisCount: ResponsiveBuilder.value(
+            context: context,
+            initial: 1,
+            md: 3,
+          ),
+          mainAxisExtent: 322,
         ),
-        crossAxisSpacing: 20,
-        mainAxisSpacing: 20,
-        mainAxisExtent: ResponsiveBuilder.value(context: context, initial: 322),
+        lg: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 240,
+          crossAxisSpacing: 20,
+          mainAxisSpacing: 20,
+          mainAxisExtent: 322,
+        ),
       ),
       itemCount: items.length,
       itemBuilder: (context, index) {

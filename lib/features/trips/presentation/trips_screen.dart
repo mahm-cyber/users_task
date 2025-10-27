@@ -12,7 +12,7 @@ class TripsScreen extends StatelessWidget {
       body: ResponsiveBuilder.responsive(
         context: context,
         child: TripsMobile(),
-        md: TripsWeb(),
+        lg: TripsWeb(),
       ),
     );
   }

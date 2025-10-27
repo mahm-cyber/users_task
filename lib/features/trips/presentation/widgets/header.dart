@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AppHeaderContent extends StatelessWidget {
-  const AppHeaderContent({super.key});
+  final int selectedIndex;
+  final Function(int) onItemSelected;
+
+  const AppHeaderContent({
+    super.key,
+    required this.selectedIndex,
+    required this.onItemSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,15 +41,15 @@ class AppHeaderContent extends StatelessWidget {
           ),
           const Spacer(),
           // Navigation items
-          _buildNavItem('Items'),
+          _buildNavItem('Items', 0),
           const SizedBox(width: 40),
-          _buildNavItem('Pricing'),
+          _buildNavItem('Pricing', 1),
           const SizedBox(width: 40),
-          _buildNavItem('Info'),
+          _buildNavItem('Info', 2),
           const SizedBox(width: 40),
-          _buildNavItem('Tasks'),
+          _buildNavItem('Tasks', 3),
           const SizedBox(width: 40),
-          _buildNavItem('Analytics'),
+          _buildNavItem('Analytics', 4),
           const SizedBox(width: 60),
           // Divider
           Container(height: 24, width: 1, color: const Color(0xFF333333)),
@@ -101,13 +108,32 @@ class AppHeaderContent extends StatelessWidget {
     );
   }
 
-  Widget _buildNavItem(String text) {
-    return Text(
-      text,
-      style: const TextStyle(
-        color: Colors.white,
-        fontSize: 15,
-        fontWeight: FontWeight.w400,
+  Widget _buildNavItem(String text, int index) {
+    final isSelected = selectedIndex == index;
+
+    return GestureDetector(
+      onTap: () => onItemSelected(index),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Spacer(),
+          Text(
+            text,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          const SizedBox(height: 20),
+          Container(
+            height: 2,
+            width: 60,
+            decoration: BoxDecoration(
+              color: isSelected ? Color(0xFFFFC268) : Colors.transparent,
+            ),
+          ),
+        ],
       ),
     );
   }

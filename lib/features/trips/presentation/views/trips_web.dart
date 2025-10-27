@@ -24,7 +24,12 @@ class TripsWeb extends StatelessWidget {
                   bottom: BorderSide(color: Color(0xFF1a1a1a), width: 1),
                 ),
               ),
-              child: const Center(child: AppHeaderContent()),
+              child: Center(
+                child: AppHeaderContent(
+                  selectedIndex: 0,
+                  onItemSelected: (index) {},
+                ),
+              ),
             ),
           ),
           SliverToBoxAdapter(
