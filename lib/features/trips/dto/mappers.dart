@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart' show Color;
 import 'package:users/features/trips/data/models/dates_model.dart';
 import 'package:users/features/trips/data/models/participant_model.dart';
 import 'package:users/features/trips/data/models/trip_model.dart';
@@ -60,4 +61,14 @@ extension TripMapper on List<TripModel> {
   List<Trip> toTrips() {
     return map((e) => e.toTrip()).toList();
   }
+}
+
+extension TripStatusToColor on TripStatus {
+  Color get toColor => switch (this) {
+    TripStatus.proposalSent => Color(0xFFFFC268),
+
+    TripStatus.pendingApproval => Color(0xFFC25F30),
+
+    TripStatus.readyForTravel => Color(0xFF33BFED),
+  };
 }

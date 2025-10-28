@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:users/core/di/di.dart';
-import 'package:users/core/network/dio_service.dart';
 import 'package:users/features/trips/presentation/trips_screen.dart';
 
 void main() async {
