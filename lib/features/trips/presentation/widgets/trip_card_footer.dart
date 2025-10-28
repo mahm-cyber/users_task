@@ -14,7 +14,7 @@ class TripCardFooter extends StatelessWidget {
       children: [
         // Avatar stack
         SizedBox(
-          width: (item.participants.length * 16),
+          width: 50,
           height: 24,
           child: Stack(
             alignment: Alignment.bottomCenter,

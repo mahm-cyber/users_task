@@ -21,6 +21,10 @@ class CoreSvgIcons extends StatelessWidget {
     return CoreSvgIcons(icon: SvgIcons.calendar);
   }
 
+  factory CoreSvgIcons.arrowDown() {
+    return CoreSvgIcons(icon: SvgIcons.arrowDown);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SvgPicture.string(

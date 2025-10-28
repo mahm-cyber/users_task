@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:users/core/widgets/core_svg_icons.dart';
 import 'package:users/features/trips/domain/entities/trip.dart';
 import 'package:users/features/trips/dto/mappers.dart';
 
@@ -64,6 +65,7 @@ class TripCardImage extends StatelessWidget {
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
+              spacing: 6,
               children: [
                 Text(
                   item.status.label,
@@ -73,11 +75,7 @@ class TripCardImage extends StatelessWidget {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                const Icon(
-                  Icons.keyboard_arrow_down,
-                  color: Colors.white,
-                  size: 16,
-                ),
+                CoreSvgIcons.arrowDown(),
               ],
             ),
           ),
