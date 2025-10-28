@@ -10,7 +10,7 @@ class MockJsonSource {
   Future<List<TripModel>> getTrips() async {
     try {
       final String jsonString = await rootBundle.loadString(
-        'assets/trips.json',
+        'assets/trips_mock.json',
       );
       final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
       final tripResponse = TripResponse.fromJson(jsonMap);

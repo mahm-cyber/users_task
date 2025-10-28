@@ -51,7 +51,7 @@ extension TripModelToTrip on TripModel? {
       dates: tripModel.dates?.toDates() ?? Dates.empty(),
       participants: tripModel.participants.toParticipantsList(),
       unfinishedTasks: tripModel.unfinishedTasks ?? 0,
-      coverImage: '',
+      coverImage: tripModel.coverImage ?? '',
     );
   }
 }

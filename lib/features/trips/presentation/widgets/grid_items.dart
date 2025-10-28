@@ -1,159 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:users/core/utils/responsive_builder.dart';
 import 'package:users/core/widgets/core_svg_icons.dart';
+import 'package:users/features/trips/domain/entities/trip.dart';
+import 'package:users/features/trips/presentation/cubit/trips_cubit.dart';
 
 class ItemsGrid extends StatelessWidget {
   const ItemsGrid({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final items = [
-      ItemData(
-        image:
-            'https://images.unsplash.com/photo-1518391846015-55a9cc003b25?w=800',
-        status: 'Pending Approval',
-        title: 'Item title',
-        dateRange: 'Jan 16 - Jan 20, 2024',
-        avatars: [
-          'https://i.pravatar.cc/150?img=1',
-          'https://i.pravatar.cc/150?img=2',
-          'https://i.pravatar.cc/150?img=3',
-        ],
-        additionalMembers: 6,
-        unfinishedTasks: 4,
-      ),
-      ItemData(
-        image:
-            'https://images.unsplash.com/photo-1514214246283-d427a95c5d2f?w=800',
-        status: 'Ready for Travel',
-        title: 'Long item title highlighting the main points...',
-        dateRange: 'Jan 16 - Jan 20, 2024',
-        avatars: [
-          'https://i.pravatar.cc/150?img=1',
-          'https://i.pravatar.cc/150?img=2',
-          'https://i.pravatar.cc/150?img=3',
-        ],
-        additionalMembers: 6,
-        unfinishedTasks: 4,
-      ),
-      ItemData(
-        image:
-            'https://images.unsplash.com/photo-1518391846015-55a9cc003b25?w=800',
-        status: 'Proposal sent',
-        title: 'Item title',
-        avatars: [
-          'https://i.pravatar.cc/150?img=1',
-          'https://i.pravatar.cc/150?img=2',
-          'https://i.pravatar.cc/150?img=3',
-        ],
-        additionalMembers: 6,
-        unfinishedTasks: 4,
-        dateRange: 'Jan 16 - Jan 20, 2024',
-      ),
-      ItemData(
-        image:
-            'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800',
-        status: 'Pending Approval',
-        title: 'Item title',
-        dateRange: 'Jan 16 - Jan 20, 2024',
-        avatars: [
-          'https://i.pravatar.cc/150?img=1',
-          'https://i.pravatar.cc/150?img=2',
-          'https://i.pravatar.cc/150?img=3',
-        ],
-        additionalMembers: 6,
-        unfinishedTasks: 4,
-      ),
-      ItemData(
-        image:
-            'https://images.unsplash.com/photo-1518391846015-55a9cc003b25?w=800',
-        status: 'Pending Approval',
-        title: 'Item title',
-        avatars: [
-          'https://i.pravatar.cc/150?img=1',
-          'https://i.pravatar.cc/150?img=2',
-          'https://i.pravatar.cc/150?img=3',
-        ],
-        additionalMembers: 6,
-        unfinishedTasks: 4,
-        dateRange: 'Jan 16 - Jan 20, 2024',
-      ),
-      ItemData(
-        image:
-            'https://images.unsplash.com/photo-1518391846015-55a9cc003b25?w=800',
-        status: 'Pending Approval',
-        title: 'Item title',
-        avatars: [
-          'https://i.pravatar.cc/150?img=1',
-          'https://i.pravatar.cc/150?img=2',
-          'https://i.pravatar.cc/150?img=3',
-        ],
-        additionalMembers: 6,
-        unfinishedTasks: 4,
-        dateRange: 'Jan 16 - Jan 20, 2024',
-      ),
-      ItemData(
-        image:
-            'https://images.unsplash.com/photo-1514214246283-d427a95c5d2f?w=800',
-        status: 'Pending Approval',
-        title: 'Item title',
-        avatars: [
-          'https://i.pravatar.cc/150?img=1',
-          'https://i.pravatar.cc/150?img=2',
-          'https://i.pravatar.cc/150?img=3',
-        ],
-        additionalMembers: 6,
-        unfinishedTasks: 4,
-        dateRange: 'Jan 16 - Jan 20, 2024',
-      ),
-      ItemData(
-        image:
-            'https://images.unsplash.com/photo-1518391846015-55a9cc003b25?w=800',
-        status: 'Pending Approval',
-        title: 'Item title',
-        avatars: [
-          'https://i.pravatar.cc/150?img=1',
-          'https://i.pravatar.cc/150?img=2',
-          'https://i.pravatar.cc/150?img=3',
-        ],
-        additionalMembers: 6,
-        unfinishedTasks: 4,
-        dateRange: 'Jan 16 - Jan 20, 2024',
-      ),
-    ];
+    return BlocBuilder<TripsCubit, TripsState>(
+      builder: (context, state) {
+        final items = state is TripsLoaded ? state.trips : [];
 
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: ResponsiveBuilder.value(
-        context: context,
-        initial: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisSpacing: 20,
-          mainAxisSpacing: 20,
-          crossAxisCount: ResponsiveBuilder.value(
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: ResponsiveBuilder.value(
             context: context,
-            initial: 1,
-            md: 3,
+            initial: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 20,
+              crossAxisCount: ResponsiveBuilder.value(
+                context: context,
+                initial: 1,
+                md: 3,
+              ),
+              mainAxisExtent: 322,
+            ),
+            lg: SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 240,
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 20,
+              mainAxisExtent: 322,
+            ),
           ),
-          mainAxisExtent: 322,
-        ),
-        lg: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 240,
-          crossAxisSpacing: 20,
-          mainAxisSpacing: 20,
-          mainAxisExtent: 322,
-        ),
-      ),
-      itemCount: items.length,
-      itemBuilder: (context, index) {
-        return ItemCard(item: items[index]);
+          itemCount: items.length,
+          itemBuilder: (context, index) {
+            return ItemCard(item: items[index]);
+          },
+        );
       },
     );
   }
 }
 
 class ItemCard extends StatelessWidget {
-  final ItemData item;
+  final Trip item;
 
   const ItemCard({super.key, required this.item});
 
@@ -179,10 +73,18 @@ class ItemCard extends StatelessWidget {
             children: [
               // Main image
               Image.network(
-                item.image,
+                item.coverImage,
                 height: 182,
                 width: double.infinity,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return const Center(
+                    child: SizedBox(
+                      height: 182,
+                      child: Icon(Icons.error, color: Colors.white, size: 40),
+                    ),
+                  );
+                },
               ),
               // Full overlay with gradient
               Positioned.fill(
@@ -231,7 +133,7 @@ class ItemCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        item.status,
+                        item.status.name,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 13,
@@ -274,7 +176,7 @@ class ItemCard extends StatelessWidget {
                     CoreSvgIcons.calendar(),
 
                     Text(
-                      item.dateRange,
+                      item.dates.formattedRangeWithNights,
                       style: const TextStyle(
                         color: Color(0xFF888888),
                         fontSize: 13,
@@ -289,39 +191,47 @@ class ItemCard extends StatelessWidget {
                   children: [
                     // Avatar stack
                     SizedBox(
-                      width: (item.avatars.length * 16) + 8.0,
+                      width: (item.participants.length * 16) + 8.0,
                       height: 24,
                       child: Stack(
                         alignment: Alignment.bottomCenter,
                         children: [
-                          for (int i = 0; i < item.avatars.length; i++)
+                          for (
+                            int i = 0;
+                            i < item.participants.length.clamp(0, 3);
+                            i++
+                          )
                             Positioned(
                               left: i * 8.0,
-                              child: _buildAvatar(item.avatars[i]),
+                              child: _buildAvatar(
+                                item.participants[i].avatarUrl ?? "",
+                              ),
                             ),
-                          Positioned(
-                            left: 3 * 8.0,
-                            child: Container(
-                              width: 24,
-                              height: 24,
-                              alignment: AlignmentGeometry.center,
-                              decoration: BoxDecoration(
-                                color: Color(0xff262626),
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  width: 0.6,
+                          if (item.participants.length - 3 != 0 &&
+                              item.participants.length > 3)
+                            Positioned(
+                              left: 3 * 8.0,
+                              child: Container(
+                                width: 24,
+                                height: 24,
+                                alignment: AlignmentGeometry.center,
+                                decoration: BoxDecoration(
                                   color: Color(0xff262626),
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    width: 0.6,
+                                    color: Color(0xff262626),
+                                  ),
                                 ),
-                              ),
-                              child: Text(
-                                '+${item.additionalMembers}',
-                                style: const TextStyle(
-                                  color: Color(0xFF888888),
-                                  fontSize: 13,
+                                child: Text(
+                                  '+${item.participants.length - 3}',
+                                  style: const TextStyle(
+                                    color: Color(0xFFFFC268),
+                                    fontSize: 8.4,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
                         ],
                       ),
                     ),
@@ -354,30 +264,15 @@ class ItemCard extends StatelessWidget {
       ),
       child: ClipOval(
         child: Image.network(
-          'https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1470',
+          url,
           fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return const Center(
+              child: Icon(Icons.person, color: Colors.white, size: 24),
+            );
+          },
         ),
       ),
     );
   }
-}
-
-class ItemData {
-  final String image;
-  final String status;
-  final String title;
-  final String dateRange;
-  final List<String> avatars;
-  final int additionalMembers;
-  final int unfinishedTasks;
-
-  ItemData({
-    required this.image,
-    required this.status,
-    required this.title,
-    required this.dateRange,
-    required this.avatars,
-    required this.additionalMembers,
-    required this.unfinishedTasks,
-  });
 }

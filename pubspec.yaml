@@ -17,6 +17,7 @@ dependencies:
   bloc_concurrency: ^0.3.0
   cached_network_image: ^3.4.1
   flutter_svg: ^2.2.1
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
@@ -28,3 +29,9 @@ flutter:
 
   assets: 
     - assets/
+
+  
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter/Inter.ttf

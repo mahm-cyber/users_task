@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-
-import '../../domain/entities/trip.dart';
+part of 'trips_cubit.dart';
 
 abstract class TripsState extends Equatable {
   const TripsState();

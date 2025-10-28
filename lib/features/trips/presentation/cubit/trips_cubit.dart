@@ -1,9 +1,9 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:users/features/trips/domain/entities/trip.dart';
 import 'package:users/features/trips/domain/usecases/get_trips.dart';
 
-import 'trips_state.dart';
+part 'trips_state.dart';
 
 class TripsCubit extends Cubit<TripsState> {
   final GetTrips getTrips;
